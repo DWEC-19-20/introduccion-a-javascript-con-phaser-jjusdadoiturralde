@@ -24,7 +24,7 @@ function addItems() {
   createItem(160, 130, 'coin');//moneda plataforma 7
   createItem(500, 100, 'coin');//moneda plataforma 8
   createItem(190, 50, 'coin'); //moneda plataforma 9
-  createItem(400,500,'poison');
+  createItem(400,500,'poison'); //veneno
   
 }
 
@@ -65,7 +65,7 @@ function createBadge() {
 function itemHandler(player, item) {
   item.kill();
   currentScore = currentScore + 10;
-    item.key
+    
   if (currentScore === winningScore) {
       createBadge();
   }
@@ -75,6 +75,15 @@ function itemHandler(player, item) {
 function badgeHandler(player, badge) {
   badge.kill();
   won = true;
+}
+
+function poisonHandler(player, poison) {
+  item.kill();
+  currentScore = currentScore + -10;
+    
+  if (currentScore === winningScore) {
+      createBadge();
+  }
 }
 
 // setup game when the web page loads
@@ -94,7 +103,7 @@ window.onload = function () {
     game.load.spritesheet('player', 'chalkers.png', 48, 62);
     game.load.spritesheet('coin', 'coin.png', 36, 44);
     game.load.spritesheet('badge', 'badge.png', 42, 54);
-    game.load.spritesheet('poison', 'poison.png', 25, 24);
+    game.load.spritesheet('poison', 'poison.png', 32, 32);
 
     
   }
