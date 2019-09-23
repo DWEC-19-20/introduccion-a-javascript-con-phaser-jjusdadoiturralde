@@ -24,7 +24,7 @@ function addItems() {
   createItem(160, 130, 'coin');//moneda plataforma 7
   createItem(500, 100, 'coin');//moneda plataforma 8
   createItem(190, 50, 'coin'); //moneda plataforma 9
-  createItem(400,500,'poison'); //veneno
+  createItem(400,500,'poison'); //veneno 1
   
 }
 
