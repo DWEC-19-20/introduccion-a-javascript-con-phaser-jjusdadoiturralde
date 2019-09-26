@@ -9,12 +9,16 @@ var jumpButton;
 var text;
 var winningMessage;
 var won = false;
+var loss = false;
 var currentScore = 0;
 var winningScore = 80;
+var life=3;
+var veneno;
 
 // add collectable items to the game
 function addItems() {
   items = game.add.physicsGroup();
+  veneno= game.add.physicsGroup();
   createItem(220, 500, 'coin');//moneda plataforma 1
   createItem(620, 500, 'coin');//moneda plataforma 2
   createItem(400, 380, 'coin');//moneda plataforma 3
@@ -24,7 +28,9 @@ function addItems() {
   createItem(160, 130, 'coin');//moneda plataforma 7
   createItem(500, 100, 'coin');//moneda plataforma 8
   createItem(190, 50, 'coin'); //moneda plataforma 9
-  createItem(400,500,'poison'); //veneno 1
+  createPoison(400,500,'poison'); //veneno 1
+  createPoison(450,500,'poison'); //veneno 2
+  createPoison(500,500,'poison'); //veneno 3
   
 }
 
@@ -61,6 +67,13 @@ function createBadge() {
   badge.animations.play('spin', 10, true);
 }
 
+function createPoison(left, top, image) {
+  var item = veneno.create(left, top, image);
+  item.animations.add('spin');
+  item.animations.play('spin', 10, true);
+  
+}
+
 // when the player collects an item on the screen
 function itemHandler(player, item) {
   item.kill();
@@ -77,13 +90,16 @@ function badgeHandler(player, badge) {
   won = true;
 }
 
-function poisonHandler(player, poison) {
-  item.kill();
-  currentScore = currentScore + -10;
+function poisonHandler(player, veneno) {
+  veneno.kill();
+  currentScore = currentScore - 10;
+  life--;
+    if(life<=0){
+        loss=true;
+        
+    }
     
-  if (currentScore === winningScore) {
-      createBadge();
-  }
+  
 }
 
 // setup game when the web page loads
@@ -100,7 +116,7 @@ window.onload = function () {
     
     
     //Load spritesheets
-    game.load.spritesheet('player', 'chalkers.png', 48, 62);
+    game.load.spritesheet('player', 'mikethefrog.png', 32, 32);
     game.load.spritesheet('coin', 'coin.png', 36, 44);
     game.load.spritesheet('badge', 'badge.png', 42, 54);
     game.load.spritesheet('poison', 'poison.png', 32, 32);
@@ -123,6 +139,7 @@ window.onload = function () {
     cursors = game.input.keyboard.createCursorKeys();
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     text = game.add.text(16, 16, "SCORE: " + currentScore, { font: "bold 24px Arial", fill: "white" });
+    text2 = game.add.text(650, 16, "SCORE: " + currentScore, { font: "bold 24px Arial", fill: "white" });
     winningMessage = game.add.text(game.world.centerX, 275, "", { font: "bold 48px Arial", fill: "white" });
     winningMessage.anchor.setTo(0.5, 1);
   }
@@ -130,9 +147,12 @@ window.onload = function () {
   // while the game is running
   function update() {
     text.text = "SCORE: " + currentScore;
+    text2.text= "VIDAS: " + life;
+    
     game.physics.arcade.collide(player, platforms);
     game.physics.arcade.overlap(player, items, itemHandler);
     game.physics.arcade.overlap(player, badges, badgeHandler);
+    game.physics.arcade.overlap(player, veneno, poisonHandler);
     player.body.velocity.x = 0;
 
     // is the left cursor key presssed?
@@ -157,7 +177,12 @@ window.onload = function () {
     }
     // when the player winw the game
     if (won) {
-      winningMessage.text = "YOU WIN!!!";
+      winningMessage.text = "YOU GIT GUD!!!";
+    }
+      
+      if (loss) {
+      winningMessage.text = "YOU DIED";
+      player.kill();
     }
   }
 
